@@ -1,0 +1,65 @@
+---
+import Base from "../layouts/Base.astro";
+import Crumbs from "../components/Crumbs.astro";
+import { site, paths } from "../config/site";
+import { getDictionary } from "../i18n";
+import { hostLabel, phoneHref } from "../i18n/mk/phones";
+
+const { ui, contacts } = getDictionary();
+const page = ui.contactsPage;
+---
+
+<Base>
+  <div class="wrap">
+    <div class="narrow page">
+      <Crumbs
+        label={ui.breadcrumbLabel}
+        items={[
+          { href: paths.home, label: ui.home },
+          { label: page.title },
+        ]}
+      />
+      <h1>{page.title}</h1>
+      <p class="lede">{page.lede}</p>
+      <p>
+        {page.trace} <a href={paths.tracks}>{ui.cover}</a>.
+      </p>
+      <p class="checked">{ui.checkedLabel} {site.verifiedOnLabel}</p>
+      <p>{page.retry}</p>
+      <div class="stack">
+        {
+          contacts.map((contact) => (
+            <article class="contact" id={contact.id}>
+              <h2>{contact.title}</h2>
+              {contact.org && <p class="org">{contact.org}</p>}
+              {contact.description && <p>{contact.description}</p>}
+              <div class="phones">
+                {contact.phones.map((phone) => (
+                  <a
+                    class="phone"
+                    href={phoneHref(phone)}
+                    translate="no"
+                    aria-label={`${ui.call} ${phone.label ? phone.label + " " : ""}${phone.display}`}
+                  >
+                    {phone.label && <span class="phone-label">{phone.label}</span>}
+                    <span class="phone-num">{phone.display}</span>
+                  </a>
+                ))}
+              </div>
+              {contact.url && (
+                <a class="site-link" href={contact.url} rel="noreferrer noopener" referrerpolicy="no-referrer">
+                  {hostLabel(contact.url)}
+                  <span class="sr-only"> ({ui.websiteHint})</span>
+                </a>
+              )}
+            </article>
+          ))
+        }
+      </div>
+      <p class="more">
+        <a href="/statii/komu-da-se-javis">{ui.whatHappens}</a>
+        <span class="badge">{ui.draftLabel}</span>
+      </p>
+    </div>
+  </div>
+</Base>

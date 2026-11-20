@@ -1,0 +1,18 @@
+---
+import Base from "../layouts/Base.astro";
+import { paths } from "../config/site";
+import { getDictionary } from "../i18n";
+
+const { ui } = getDictionary();
+---
+
+<Base robots="noindex, nofollow">
+  <div class="wrap">
+    <div class="narrow page">
+      <h1>{ui.missing.title}</h1>
+      <p class="lede">{ui.missing.text}</p>
+      <p><a href={paths.home}>{ui.home}</a></p>
+      <p><a href={paths.contacts}>{ui.footerNav[1].label}</a></p>
+    </div>
+  </div>
+</Base>
