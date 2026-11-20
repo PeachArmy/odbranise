@@ -1,0 +1,51 @@
+---
+import { render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import Crumbs from "../../components/Crumbs.astro";
+import { paths, site } from "../../config/site";
+import { getDictionary } from "../../i18n";
+import { loadArticles } from "../../lib/articles";
+
+export async function getStaticPaths() {
+  const articles = await loadArticles(site.defaultLocale);
+  return articles.map((article) => ({
+    params: { slug: article.data.slug },
+    props: { article },
+  }));
+}
+
+const { article } = Astro.props;
+const { Content } = await render(article);
+const { ui } = getDictionary();
+---
+
+<Base robots={article.data.draft ? "noindex, nofollow" : "index, follow"}>
+  <div class="wrap">
+    <div class="narrow page">
+      <Crumbs
+        label={ui.breadcrumbLabel}
+        items={[
+          { href: paths.home, label: ui.home },
+          { href: paths.articles, label: ui.articlesLabel },
+          { label: article.data.title },
+        ]}
+      />
+      {
+        article.data.draft && (
+          <p class="draft-banner" role="note">
+            <span class="badge">{ui.draftLabel}</span>
+            <span>{ui.draftText}</span>
+          </p>
+        )
+      }
+      <h1>{article.data.title}</h1>
+      <p class="lede">{article.data.description}</p>
+      <div class="prose">
+        <Content />
+      </div>
+      <p class="more">
+        {ui.articleLinksLead} <a href={paths.contacts}>{ui.footerNav[1].label}</a>
+      </p>
+    </div>
+  </div>
+</Base>

@@ -1,0 +1,50 @@
+---
+import Base from "../layouts/Base.astro";
+import { getDictionary } from "../i18n";
+
+const { ui } = getDictionary();
+const page = ui.landing;
+---
+
+<Base>
+  <div class="wrap">
+    <section class="hero">
+      <div class="blob" aria-hidden="true"></div>
+      <div class="hero-copy">
+        <h1>
+          {page.heroLead} <span>{page.heroAccent}</span> {page.heroTail}
+        </h1>
+        <p class="lede">{page.lede}</p>
+        <p class="scope">{page.scope}</p>
+        <h2 class="ask" id="prashanje">{page.ask}</h2>
+        <ul class="doors">
+          {
+            page.doors.map((door) => (
+              <li>
+                <a class="door" href={door.href}>
+                  <span class={`swatch swatch-${door.tone}`} aria-hidden="true"></span>
+                  <h3>{door.title}</h3>
+                  <p>{door.text}</p>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+    <section class="split">
+      <article class="quote">
+        <p class="kicker">{page.kicker}</p>
+        <blockquote>
+          <p>„{page.quote}“</p>
+        </blockquote>
+        <a href={page.quoteHref}>{page.quoteLink}</a>
+      </article>
+      <section class="plan">
+        <h2>{page.planTitle}</h2>
+        <p>{page.planText}</p>
+        <a class="pill" href={page.planHref}>{page.planButton}</a>
+      </section>
+    </section>
+  </div>
+</Base>

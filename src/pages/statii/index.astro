@@ -1,0 +1,40 @@
+---
+import Base from "../../layouts/Base.astro";
+import Crumbs from "../../components/Crumbs.astro";
+import { paths, site } from "../../config/site";
+import { getDictionary } from "../../i18n";
+import { loadArticles } from "../../lib/articles";
+
+const { ui } = getDictionary();
+const articles = await loadArticles(site.defaultLocale);
+const page = ui.articlesPage;
+---
+
+<Base>
+  <div class="wrap">
+    <div class="narrow page">
+      <Crumbs
+        label={ui.breadcrumbLabel}
+        items={[
+          { href: paths.home, label: ui.home },
+          { label: page.title },
+        ]}
+      />
+      <h1>{page.title}</h1>
+      <p class="lede">{page.lede}</p>
+      <ul class="article-list">
+        {
+          articles.map((article) => (
+            <li>
+              <a class="article-card" href={`${paths.articles}/${article.data.slug}`}>
+                {article.data.draft && <span class="badge">{ui.draftLabel}</span>}
+                <h2>{article.data.title}</h2>
+                <p>{article.data.description}</p>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</Base>

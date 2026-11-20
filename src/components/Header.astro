@@ -1,0 +1,69 @@
+---
+import { site } from "../config/site";
+import { getDictionary } from "../i18n";
+import { helpBarContacts } from "../i18n/mk/contacts";
+import { phoneHref } from "../i18n/mk/phones";
+import { isCurrent } from "../lib/path";
+
+interface Props {
+  pathname: string;
+}
+
+const { pathname } = Astro.props;
+const { ui } = getDictionary();
+const help = helpBarContacts();
+---
+
+<header class="site-header">
+  <div class="help">
+    <div class="wrap help-inner">
+      <p class="help-q" id="help-q">{ui.helpNow}</p>
+      <div class="help-links" role="group" aria-labelledby="help-q">
+        {
+          help.map((item) => {
+            const phone = item.phones[0];
+            return (
+              <a href={phoneHref(phone)} aria-label={`${ui.call}, ${item.helpBar!.label} ${phone.display}`}>
+                <span>{item.helpBar!.label}</span>
+                <strong translate="no">{phone.display}</strong>
+              </a>
+            );
+          })
+        }
+      </div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="nav-bar">
+      <a class="logo" href="/" aria-label={`${site.brand}, ${ui.logoHome}`}>
+        <span class="sun" aria-hidden="true"></span>
+        {site.brand}
+      </a>
+      <button
+        class="menu-btn"
+        type="button"
+        data-menu-button
+        data-label-open={ui.menuOpen}
+        data-label-close={ui.menuClose}
+        aria-expanded="false"
+        aria-controls="nav-links"
+      >
+        {ui.menuOpen}
+      </button>
+      <a class="exit" data-quick-exit href={site.quickExitUrl} rel="noreferrer" aria-describedby="exit-hint">
+        <span aria-hidden="true">×</span>
+        {ui.quickExit}
+      </a>
+      <p id="exit-hint" class="sr-only">{ui.quickExitHint}</p>
+      <nav id="nav-links" class="nav-links" data-menu aria-label={ui.navLabel}>
+        {
+          ui.nav.map((item) => (
+            <a href={item.href} aria-current={isCurrent(pathname, item.href) ? "page" : undefined}>
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+    </div>
+  </div>
+</header>

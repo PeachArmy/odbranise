@@ -1,0 +1,82 @@
+---
+import Base from "../layouts/Base.astro";
+import Crumbs from "../components/Crumbs.astro";
+import { paths } from "../config/site";
+import { getDictionary } from "../i18n";
+
+const { ui, tracks } = getDictionary();
+---
+
+<Base>
+  <div class="wrap">
+    <div class="narrow page">
+      <Crumbs
+        label={ui.breadcrumbLabel}
+        items={[
+          { href: paths.home, label: ui.home },
+          { label: tracks.title },
+        ]}
+      />
+      <h1>{tracks.title}</h1>
+      <p class="lede">{tracks.lede}</p>
+      <div class="stack">
+        {
+          tracks.notes.map((note) => (
+            <section class="note">
+              <h2>{note.title}</h2>
+              {note.paragraphs.map((paragraph) => (
+                <p>{paragraph}</p>
+              ))}
+            </section>
+          ))
+        }
+        <section class="note">
+          <h2>{tracks.exitTitle}</h2>
+          {tracks.exitParagraphs.map((paragraph) => (
+            <p>{paragraph}</p>
+          ))}
+        </section>
+      </div>
+      <h2>{tracks.tocTitle}</h2>
+      <p>{tracks.tocNote}</p>
+      <ul class="toc">
+        {
+          tracks.browsers.map((browser) => (
+            <li>
+              <a href={`#${browser.id}`}>{browser.name}</a>
+            </li>
+          ))
+        }
+      </ul>
+      {
+        tracks.browsers.map((browser) => (
+          <section class="browser" id={browser.id}>
+            <h2>{browser.name}</h2>
+            <h3>{tracks.privateHeading}</h3>
+            <ol>
+              {browser.private.map((step) => (
+                <li>{step}</li>
+              ))}
+            </ol>
+            <h3>{tracks.clearHeading}</h3>
+            <ol>
+              {browser.clear.map((step) => (
+                <li>{step}</li>
+              ))}
+            </ol>
+          </section>
+        ))
+      }
+      <p>{tracks.other}</p>
+      <h2>{tracks.limitsTitle}</h2>
+      <ul class="limits">
+        {tracks.limits.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+      <p class="more">
+        <a href={paths.contacts}>{ui.footerNav[1].label}</a>
+      </p>
+    </div>
+  </div>
+</Base>
